@@ -1,0 +1,162 @@
+<section class="contact-page">
+  <div class="contact-intro">
+    <span> GET IN TOUCH </span>
+
+    <h1>We'd love to hear from you.</h1>
+
+    <p>Have a question about a product, an order, or anything else? Send us a message.</p>
+
+    <div class="contact-info">
+      <div class="info-item">
+        <div class="icon" aria-hidden="true">✉</div>
+
+        <div>
+          <strong>Email</strong>
+          <span>hello@panhashop.com</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="icon" aria-hidden="true">☎</div>
+
+        <div>
+          <strong>Phone</strong>
+          <span>+855 12 345 678</span>
+        </div>
+      </div>
+
+      <div class="info-item">
+        <div class="icon" aria-hidden="true">◉</div>
+
+        <div>
+          <strong>Location</strong>
+          <span>Phnom Penh, Cambodia</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="contact-form">
+    @if (submitted()) {
+      <div class="success">
+        <div aria-hidden="true">✓</div>
+
+        <h2>Message sent!</h2>
+
+        <p>Thank you for contacting us. We'll get back to you as soon as possible.</p>
+
+        <button type="button" (click)="reset()">Send another message</button>
+      </div>
+    } @else {
+      <form #contactForm="ngForm" (ngSubmit)="submitForm(contactForm)" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="contactName">
+              Your Name <span class="required" aria-hidden="true">*</span>
+            </label>
+
+            <input
+              id="contactName"
+              type="text"
+              name="name"
+              [(ngModel)]="contactData.name"
+              #nameField="ngModel"
+              required
+              minlength="2"
+              placeholder="Enter your name"
+              [class.invalid]="nameField.invalid && (nameField.touched || contactForm.submitted)"
+            />
+
+            @if (nameField.invalid && (nameField.touched || contactForm.submitted)) {
+              <small class="error-msg" role="alert">
+                Please enter your name (min 2 characters).
+              </small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="contactEmail">
+              Email <span class="required" aria-hidden="true">*</span>
+            </label>
+
+            <input
+              id="contactEmail"
+              type="email"
+              name="email"
+              [(ngModel)]="contactData.email"
+              #emailField="ngModel"
+              required
+              email
+              placeholder="you@example.com"
+              [class.invalid]="emailField.invalid && (emailField.touched || contactForm.submitted)"
+            />
+
+            @if (emailField.invalid && (emailField.touched || contactForm.submitted)) {
+              <small class="error-msg" role="alert"> Please enter a valid email address. </small>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contactSubject">
+            Subject <span class="required" aria-hidden="true">*</span>
+          </label>
+
+          <input
+            id="contactSubject"
+            type="text"
+            name="subject"
+            [(ngModel)]="contactData.subject"
+            #subjectField="ngModel"
+            required
+            minlength="3"
+            placeholder="How can we help?"
+            [class.invalid]="
+              subjectField.invalid && (subjectField.touched || contactForm.submitted)
+            "
+          />
+
+          @if (subjectField.invalid && (subjectField.touched || contactForm.submitted)) {
+            <small class="error-msg" role="alert">
+              Please enter a subject (min 3 characters).
+            </small>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="contactMessage">
+            Message <span class="required" aria-hidden="true">*</span>
+          </label>
+
+          <textarea
+            id="contactMessage"
+            name="message"
+            [(ngModel)]="contactData.message"
+            #messageField="ngModel"
+            required
+            minlength="10"
+            rows="7"
+            placeholder="Write your message..."
+            [class.invalid]="
+              messageField.invalid && (messageField.touched || contactForm.submitted)
+            "
+          ></textarea>
+
+          @if (messageField.invalid && (messageField.touched || contactForm.submitted)) {
+            <small class="error-msg" role="alert">
+              Please enter a message (min 10 characters).
+            </small>
+          }
+        </div>
+
+        <button type="submit" [disabled]="isSubmitting()" class="send-button">
+          @if (isSubmitting()) {
+            Sending...
+          } @else {
+            Send Message →
+          }
+        </button>
+      </form>
+    }
+  </div>
+</section>

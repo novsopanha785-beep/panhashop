@@ -1,0 +1,207 @@
+<section class="detail-page">
+  <!-- =========================================
+       BACK
+  ========================================== -->
+
+  <a routerLink="/products" class="back-link"> ← Back to Products </a>
+
+  <!-- =========================================
+       LOADING
+  ========================================== -->
+
+  @if (loading()) {
+    <div class="detail-loading">
+      <!-- IMAGE SKELETON -->
+
+      <div class="detail-skeleton image"></div>
+
+      <!-- CONTENT SKELETON -->
+
+      <div class="detail-skeleton-content">
+        <div class="detail-skeleton line"></div>
+
+        <div class="detail-skeleton title"></div>
+
+        <div class="detail-skeleton text"></div>
+
+        <div class="detail-skeleton text"></div>
+
+        <div class="detail-skeleton price"></div>
+      </div>
+    </div>
+  }
+
+  <!-- =========================================
+       ERROR
+  ========================================== -->
+
+  @else if (error()) {
+    <div class="error-box">
+      <div class="error-icon">⚠</div>
+
+      <h2>Product not found</h2>
+
+      <p>We couldn't load this product.</p>
+
+      <a routerLink="/products" class="back-button"> Back to Products </a>
+    </div>
+  }
+
+  <!-- =========================================
+       PRODUCT
+  ========================================== -->
+
+  @else if (product(); as item) {
+    <div class="product-detail">
+      <!-- =====================================
+           PRODUCT GALLERY
+      ====================================== -->
+
+      <div class="product-gallery">
+        <!-- MAIN IMAGE -->
+        <div class="main-image">
+          <img [src]="selectedImage()" [alt]="item.title" (error)="onImageError($event)" />
+        </div>
+
+        <!-- THUMBNAILS -->
+        @if (item.images && item.images.length > 0) {
+          <div class="thumbnail-list">
+            @for (image of item.images; track image; let idx = $index) {
+              <button
+                type="button"
+                class="thumbnail"
+                [class.active]="selectedImage() === image"
+                [attr.aria-label]="'Select image ' + (idx + 1) + ' of ' + item.title"
+                (click)="selectImage(image)"
+              >
+                <img
+                  [src]="image"
+                  [alt]="item.title + ' thumbnail ' + (idx + 1)"
+                  (error)="onImageError($event)"
+                />
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- =====================================
+           PRODUCT INFORMATION
+      ====================================== -->
+
+      <div class="product-info">
+        <!-- CATEGORY -->
+        <span class="category">
+          {{ item.category }}
+        </span>
+
+        <!-- TITLE -->
+        <h1>
+          {{ item.title }}
+        </h1>
+
+        <!-- RATING -->
+        <div class="rating">
+          <span class="stars" aria-hidden="true">★</span>
+          <strong>{{ item.rating }}</strong>
+          <span>/ 5</span>
+        </div>
+
+        <!-- DESCRIPTION -->
+        <p class="description">
+          {{ item.description }}
+        </p>
+
+        <!-- PRICE -->
+        <div class="price">
+          {{ item.price | currency: 'USD' : 'symbol' : '1.2-2' }}
+        </div>
+
+        <!-- STOCK -->
+        <div class="stock">
+          @if (item.stock > 0) {
+            <span class="stock-dot" aria-hidden="true"></span>
+            In stock · {{ item.stock }} available
+          } @else {
+            <span class="out-of-stock"> Out of stock </span>
+          }
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="actions">
+          <button
+            type="button"
+            class="add-cart"
+            [disabled]="item.stock <= 0"
+            [attr.aria-label]="'Add ' + item.title + ' to cart'"
+            (click)="addToCart()"
+          >
+            Add to Cart
+          </button>
+
+          <button
+            type="button"
+            class="buy-button"
+            [disabled]="item.stock <= 0"
+            [attr.aria-label]="'Buy ' + item.title + ' now'"
+            (click)="buyNow()"
+          >
+            Buy Now
+          </button>
+        </div>
+
+        <!-- FEEDBACK MESSAGE -->
+        @if (feedbackMessage()) {
+          <div
+            [class]="feedbackType() === 'success' ? 'cart-success' : 'cart-warning'"
+            role="status"
+          >
+            {{ feedbackMessage() }}
+          </div>
+        }
+
+        <!-- ===================================
+             FEATURES
+        ==================================== -->
+
+        <div class="features">
+          <!-- DELIVERY -->
+
+          <div class="feature">
+            <span> 🚚 </span>
+
+            <div>
+              <strong> Fast Delivery </strong>
+
+              <small> Quick and reliable shipping </small>
+            </div>
+          </div>
+
+          <!-- RETURNS -->
+
+          <div class="feature">
+            <span> ↩ </span>
+
+            <div>
+              <strong> Easy Returns </strong>
+
+              <small> Simple return process </small>
+            </div>
+          </div>
+
+          <!-- PAYMENT -->
+
+          <div class="feature">
+            <span> ✓ </span>
+
+            <div>
+              <strong> Secure Payment </strong>
+
+              <small> Your payment is protected </small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</section>

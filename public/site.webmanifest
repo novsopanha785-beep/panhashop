@@ -1,0 +1,16 @@
+{
+  "name": "PANHASHOP",
+  "short_name": "PANHASHOP",
+  "description": "Modern products for modern living.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6c5ce7",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ]
+}

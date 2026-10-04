@@ -1,0 +1,177 @@
+<!-- =========================================
+     HERO
+========================================= -->
+
+<section class="hero">
+  <div class="hero-content">
+    <span class="eyebrow"> NEW COLLECTION 2026 </span>
+
+    <h1>
+      Discover products
+      <span>you'll love.</span>
+    </h1>
+
+    <p>Explore carefully selected products made for your everyday lifestyle.</p>
+
+    <div class="hero-buttons">
+      <a routerLink="/products" class="primary-button">
+        Shop Collection
+
+        <span> → </span>
+      </a>
+
+      <a routerLink="/contact" class="secondary-button"> Contact Us </a>
+    </div>
+  </div>
+
+  <!-- HERO VISUAL -->
+
+  <div class="hero-visual">
+    <div class="circle circle-one"></div>
+
+    <div class="circle circle-two"></div>
+
+    <div class="hero-card">
+      <span class="floating-label"> Trending </span>
+
+      <img
+        src="https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/1.webp"
+        alt="Featured product"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     FEATURES
+========================================= -->
+
+<section class="features">
+  <div class="feature">
+    <span> 🚚 </span>
+
+    <div>
+      <strong> Free Delivery </strong>
+
+      <p>On selected orders</p>
+    </div>
+  </div>
+
+  <div class="feature">
+    <span> ↩ </span>
+
+    <div>
+      <strong> Easy Returns </strong>
+
+      <p>Simple return process</p>
+    </div>
+  </div>
+
+  <div class="feature">
+    <span> ✓ </span>
+
+    <div>
+      <strong> Secure Payment </strong>
+
+      <p>Your payment is protected</p>
+    </div>
+  </div>
+
+  <div class="feature">
+    <span> ★ </span>
+
+    <div>
+      <strong> Quality Products </strong>
+
+      <p>Carefully selected items</p>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================
+     PRODUCTS
+========================================= -->
+
+<section class="products-section">
+  <!-- SECTION HEADER -->
+
+  <div class="section-heading">
+    <div>
+      <span class="section-label"> OUR PRODUCTS </span>
+
+      <h2>Popular right now</h2>
+    </div>
+
+    <a routerLink="/products" class="view-all"> View all → </a>
+  </div>
+
+  <!-- =======================================
+       LOADING
+  ======================================== -->
+
+  @if (loading()) {
+    <div class="loading-grid">
+      @for (item of [1, 2, 3, 4]; track item) {
+        <div class="skeleton">
+          <div class="skeleton-image"></div>
+
+          <div class="skeleton-text"></div>
+
+          <div class="skeleton-small"></div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- =======================================
+       ERROR
+  ======================================== -->
+
+  @else if (error()) {
+    <div class="api-error">
+      <div class="error-icon">⚠</div>
+
+      <h3>Products couldn't be loaded</h3>
+
+      <p>Please check your internet connection and try again.</p>
+
+      <button type="button" (click)="loadProducts()">Try Again</button>
+    </div>
+  }
+
+  <!-- =======================================
+       NO PRODUCTS
+  ======================================== -->
+
+  @else if (products().length === 0) {
+    <div class="api-error">
+      <h3>No products available</h3>
+    </div>
+  }
+
+  <!-- =======================================
+       PRODUCTS
+  ======================================== -->
+
+  @else {
+    <div class="product-grid">
+      @for (product of products(); track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </div>
+  }
+</section>
+
+<!-- =========================================
+     CTA
+========================================= -->
+
+<section class="cta">
+  <div>
+    <span> READY TO SHOP? </span>
+
+    <h2>Find something special today.</h2>
+  </div>
+
+  <a routerLink="/products" class="cta-button"> Explore Products → </a>
+</section>

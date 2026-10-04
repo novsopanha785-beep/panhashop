@@ -1,0 +1,53 @@
+<header class="navbar">
+  <div class="nav-container">
+    <a routerLink="/" class="logo" (click)="closeMenu()"> <span>PANHA</span>SHOP </a>
+
+    <nav id="primary-navigation" class="nav-links" aria-label="Primary" [class.open]="menuOpen()">
+      <a
+        routerLink="/"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMenu()"
+      >
+        Home
+      </a>
+
+      <a routerLink="/products" routerLinkActive="active" (click)="closeMenu()"> Products </a>
+
+      <a routerLink="/about" routerLinkActive="active" (click)="closeMenu()"> About </a>
+
+      <a routerLink="/contact" routerLinkActive="active" (click)="closeMenu()"> Contact </a>
+    </nav>
+
+    <div class="nav-actions">
+      <a routerLink="/products" class="search-button" aria-label="Search products">
+        <span aria-hidden="true">⌕</span>
+      </a>
+
+      <a
+        routerLink="/cart"
+        class="cart-button"
+        [attr.aria-label]="'Shopping cart, ' + cartService.cartCount() + ' items'"
+      >
+        <span class="cart-icon" aria-hidden="true">🛒</span>
+
+        @if (cartService.cartCount() > 0) {
+          <span class="cart-count">
+            {{ cartService.cartCount() }}
+          </span>
+        }
+      </a>
+
+      <button
+        type="button"
+        class="menu-button"
+        (click)="toggleMenu()"
+        aria-label="Toggle navigation menu"
+        aria-controls="primary-navigation"
+        [attr.aria-expanded]="menuOpen()"
+      >
+        ☰
+      </button>
+    </div>
+  </div>
+</header>

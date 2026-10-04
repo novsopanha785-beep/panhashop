@@ -1,0 +1,204 @@
+<!-- =========================================
+     PRODUCTS PAGE
+========================================= -->
+<section class="products-page">
+  <!-- HEADER & SEARCH -->
+  <div class="products-header">
+    <div>
+      <span class="page-label"> SHOPORA COLLECTION </span>
+
+      <h1>Explore Products</h1>
+
+      <p>Discover products selected for your everyday lifestyle.</p>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+      <span class="search-icon" aria-hidden="true">⌕</span>
+
+      <input
+        type="text"
+        placeholder="Search products..."
+        [value]="searchTerm()"
+        (input)="onSearchInput($event)"
+        aria-label="Search products"
+        name="search"
+      />
+
+      @if (searchTerm()) {
+        <button
+          type="button"
+          class="clear-search"
+          (click)="clearSearch()"
+          aria-label="Clear search query"
+        >
+          ×
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- =======================================
+       CATEGORY FILTER BAR + SORT
+  ======================================== -->
+  <div class="filter-bar">
+    <div class="category-filter-container">
+      <div class="category-filter-scroll">
+        <button
+          type="button"
+          class="category-chip"
+          [class.active]="selectedCategory() === 'all'"
+          [disabled]="loading()"
+          (click)="selectCategory('all')"
+        >
+          All Categories
+        </button>
+
+        @for (cat of categories(); track cat) {
+          <button
+            type="button"
+            class="category-chip"
+            [class.active]="selectedCategory() === cat"
+            [disabled]="loading()"
+            (click)="selectCategory(cat)"
+          >
+            {{ cat }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="sort-box">
+      <label for="sortSelect">Sort by</label>
+      <select
+        id="sortSelect"
+        name="sort"
+        [value]="sortBy()"
+        [disabled]="loading()"
+        (change)="onSortChange($event)"
+      >
+        @for (opt of sortOptions; track opt.value) {
+          <option [value]="opt.value">{{ opt.label }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <!-- =======================================
+       FIRST LOAD — full skeleton grid
+       Every later filter/sort/page change no longer replaces this section;
+       see the "is-refreshing" state below instead, so the page doesn't
+       flash blank each time a chip or the sort dropdown is used.
+  ======================================== -->
+  @if (loading() && !hasLoadedOnce()) {
+    <div class="loading-grid">
+      @for (item of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]; track item) {
+        <div class="product-skeleton">
+          <div class="skeleton-image"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-price"></div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- =======================================
+       ERROR STATE
+  ======================================== -->
+  @else if (error()) {
+    <div class="error-state">
+      <div class="error-icon" aria-hidden="true">⚠</div>
+      <h2>Something went wrong</h2>
+      <p>
+        We couldn't load the products from the server. Please check your connection and try again.
+      </p>
+      <button type="button" class="retry-button" (click)="loadProducts()">Try Again</button>
+    </div>
+  }
+
+  <!-- =======================================
+       PRODUCTS & RESULTS
+       [is-refreshing] dims the existing grid instead of tearing it down
+       while a new category/sort/search request is in flight.
+  ======================================== -->
+  @else {
+    <div class="results-bar">
+      <div class="results-info">
+        <strong>{{ totalProducts() }} products found</strong>
+        @if (selectedCategory() !== 'all') {
+          <span class="active-filter-badge"> Category: {{ selectedCategory() }} </span>
+        }
+        @if (searchTerm()) {
+          <span class="active-filter-badge"> Search: "{{ searchTerm() }}" </span>
+        }
+        @if (loading()) {
+          <span class="refresh-indicator" aria-hidden="true"></span>
+        }
+      </div>
+
+      @if (totalPages() > 1) {
+        <span class="page-indicator"> Page {{ currentPage() }} of {{ totalPages() }} </span>
+      }
+    </div>
+
+    @if (products().length > 0) {
+      <div class="product-grid" [class.is-refreshing]="loading()" [attr.aria-busy]="loading()">
+        @for (product of products(); track product.id) {
+          <app-product-card [product]="product" />
+        }
+      </div>
+
+      <!-- =====================================
+           PAGINATION
+      ====================================== -->
+      @if (totalPages() > 1) {
+        <nav class="pagination-nav" aria-label="Products pagination">
+          <button
+            type="button"
+            class="page-btn prev-next"
+            [disabled]="currentPage() <= 1"
+            (click)="goToPage(currentPage() - 1)"
+            aria-label="Go to previous page"
+          >
+            ← Previous
+          </button>
+
+          <div class="page-numbers">
+            @for (page of pagesList(); track page) {
+              <button
+                type="button"
+                class="page-btn page-num"
+                [class.active]="page === currentPage()"
+                [attr.aria-current]="page === currentPage() ? 'page' : null"
+                [attr.aria-label]="'Go to page ' + page"
+                (click)="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+            }
+          </div>
+
+          <button
+            type="button"
+            class="page-btn prev-next"
+            [disabled]="currentPage() >= totalPages()"
+            (click)="goToPage(currentPage() + 1)"
+            aria-label="Go to next page"
+          >
+            Next →
+          </button>
+        </nav>
+      }
+    } @else {
+      <div class="empty-state">
+        <div class="empty-icon" aria-hidden="true">🔎</div>
+        <h2>No products found</h2>
+        <p>We couldn't find any products matching your search or category filter.</p>
+        <button type="button" class="clear-all-btn" (click)="clearAllFilters()">
+          Clear Filters
+        </button>
+      </div>
+    }
+  }
+</section>

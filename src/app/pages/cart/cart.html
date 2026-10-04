@@ -1,0 +1,137 @@
+<section class="cart-page">
+  <div class="cart-header">
+    <span> SHOPPING CART </span>
+
+    <h1>Your Cart</h1>
+
+    <p>Review your selected products before checkout.</p>
+  </div>
+
+  @if (cartService.items().length === 0) {
+    <div class="empty-cart">
+      <div class="cart-icon" aria-hidden="true">🛒</div>
+
+      <h2>Your cart is empty</h2>
+
+      <p>Looks like you haven't added anything yet.</p>
+
+      <a routerLink="/products" class="shop-button"> Start Shopping → </a>
+    </div>
+  } @else {
+    <div class="cart-layout">
+      <div class="cart-items">
+        <div class="cart-toolbar">
+          <span>{{ cartService.cartCount() }} item(s) in your cart</span>
+          <button type="button" class="clear-cart" (click)="clear()">Clear cart</button>
+        </div>
+
+        @for (item of cartService.items(); track item.product.id) {
+          <div class="cart-item">
+            <img
+              [src]="item.product.thumbnail"
+              [alt]="item.product.title"
+              (error)="onImageError($event)"
+            />
+
+            <div class="item-info">
+              <span>
+                {{ item.product.category }}
+              </span>
+
+              <h3>
+                <a [routerLink]="['/products', item.product.id]" class="item-link">
+                  {{ item.product.title }}
+                </a>
+              </h3>
+
+              <strong>
+                {{ item.product.price | currency: 'USD' : 'symbol' : '1.2-2' }}
+              </strong>
+            </div>
+
+            <div class="item-actions">
+              <div class="quantity">
+                <button
+                  type="button"
+                  (click)="decrease(item.product.id)"
+                  [disabled]="item.quantity <= 1"
+                  [attr.title]="
+                    item.quantity <= 1
+                      ? 'Minimum quantity is 1 (use Remove button to delete item)'
+                      : 'Decrease quantity'
+                  "
+                  [attr.aria-label]="'Decrease quantity of ' + item.product.title"
+                >
+                  −
+                </button>
+
+                <span [attr.aria-label]="'Quantity: ' + item.quantity">
+                  {{ item.quantity }}
+                </span>
+
+                <button
+                  type="button"
+                  (click)="increase(item.product.id)"
+                  [disabled]="item.quantity >= item.product.stock"
+                  [attr.title]="
+                    item.quantity >= item.product.stock
+                      ? 'Maximum available stock reached'
+                      : 'Increase quantity'
+                  "
+                  [attr.aria-label]="'Increase quantity of ' + item.product.title"
+                >
+                  +
+                </button>
+              </div>
+
+              <strong class="item-total">
+                {{ item.product.price * item.quantity | currency: 'USD' : 'symbol' : '1.2-2' }}
+              </strong>
+
+              <button
+                type="button"
+                class="remove"
+                [attr.aria-label]="'Remove ' + item.product.title + ' from cart'"
+                (click)="remove(item.product.id)"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+
+      <aside class="summary">
+        <h2>Order Summary</h2>
+
+        <div class="summary-row">
+          <span> Subtotal </span>
+
+          <strong>
+            {{ cartService.cartTotal() | currency: 'USD' : 'symbol' : '1.2-2' }}
+          </strong>
+        </div>
+
+        <div class="summary-row">
+          <span> Shipping </span>
+
+          <strong class="free"> FREE </strong>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="total">
+          <span> Total </span>
+
+          <strong>
+            {{ cartService.cartTotal() | currency: 'USD' : 'symbol' : '1.2-2' }}
+          </strong>
+        </div>
+
+        <a routerLink="/checkout" class="checkout"> Checkout → </a>
+
+        <a routerLink="/products" class="continue"> ← Continue Shopping </a>
+      </aside>
+    </div>
+  }
+</section>

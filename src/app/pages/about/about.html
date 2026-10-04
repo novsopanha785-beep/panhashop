@@ -1,0 +1,30 @@
+<section class="about-page">
+  <div class="about-hero">
+    <span class="eyebrow">OUR STORY</span>
+    <h1>Built for people who just want good products, simply.</h1>
+    <p>
+      PANHASHOP started as a final-year web development project with a simple goal: make browsing
+      and buying online feel fast, clear, and a little bit delightful. We pull live product data
+      from the DummyJSON API to keep the catalog realistic, while the checkout stays fully simulated
+      for demo purposes.
+    </p>
+  </div>
+
+  <div class="values-grid">
+    @for (value of values; track value.title) {
+      <div class="value-card">
+        <span class="value-icon" aria-hidden="true">{{ value.icon }}</span>
+        <h3>{{ value.title }}</h3>
+        <p>{{ value.text }}</p>
+      </div>
+    }
+  </div>
+
+  <div class="about-cta">
+    <div>
+      <span>WANT TO SEE IT IN ACTION?</span>
+      <h2>Browse the full catalog.</h2>
+    </div>
+    <a routerLink="/products" class="cta-button"> Shop Now → </a>
+  </div>
+</section>

@@ -1,0 +1,68 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', Arial, sans-serif;
+  background: #ffffff;
+  color: #111827;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+::selection {
+  background: #ddd8ff;
+  color: #111827;
+}
+
+/* Keyboard focus ring for all interactive elements */
+:focus-visible {
+  outline: 3px solid #6c5ce7;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Skip link (visible only when focused) */
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -60px;
+  z-index: 2000;
+  padding: 10px 16px;
+  background: #111827;
+  color: #ffffff;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

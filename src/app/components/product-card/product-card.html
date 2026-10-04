@@ -1,0 +1,52 @@
+<article class="product-card">
+  <a
+    [routerLink]="['/products', product().id]"
+    class="product-image"
+    [attr.aria-label]="'View details for ' + product().title"
+  >
+    <span class="discount"> -{{ product().discountPercentage | number: '1.0-0' }}% </span>
+
+    <img
+      [src]="product().thumbnail"
+      [alt]="product().title"
+      loading="lazy"
+      (error)="onImageError($event)"
+    />
+
+    <div class="view-overlay">View Product</div>
+  </a>
+
+  <div class="product-info">
+    <p class="category">
+      {{ product().category }}
+    </p>
+
+    <a [routerLink]="['/products', product().id]" class="product-title">
+      {{ product().title }}
+    </a>
+
+    <div class="rating">
+      <span class="stars" aria-hidden="true">★</span>
+
+      <span>
+        {{ product().rating }}
+      </span>
+    </div>
+
+    <div class="product-bottom">
+      <strong>
+        {{ product().price | currency: 'USD' : 'symbol' : '1.2-2' }}
+      </strong>
+
+      <button
+        type="button"
+        class="add-button"
+        [disabled]="product().stock <= 0"
+        [attr.aria-label]="'Add ' + product().title + ' to cart'"
+        (click)="addToCart($event)"
+      >
+        +
+      </button>
+    </div>
+  </div>
+</article>

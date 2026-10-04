@@ -1,0 +1,341 @@
+<section class="checkout-page">
+  <!-- =========================================
+       ORDER CONFIRMATION STATE
+  ========================================== -->
+  @if (placedOrder(); as order) {
+    <div class="confirmation-card">
+      <div class="success-icon" aria-hidden="true">✓</div>
+
+      <span class="confirmation-label"> ORDER CONFIRMED </span>
+
+      <h1>Thank you for your order!</h1>
+
+      <p class="confirmation-subtitle">Your order has been received and is being processed.</p>
+
+      <div class="order-id-badge">
+        <span>Order Number:</span>
+        <strong>#{{ order.id }}</strong>
+      </div>
+
+      <!-- DEMO NOTICE -->
+      <div class="demo-notice">
+        <span>ℹ</span>
+        <p>
+          <strong>Demo Mode:</strong> No real payment was processed. This is a simulated student
+          final project.
+        </p>
+      </div>
+
+      <!-- ORDER DETAILS -->
+      <div class="order-details-grid">
+        <div class="detail-box">
+          <h3>Customer Details</h3>
+          <p><strong>Name:</strong> {{ order.customer.fullName }}</p>
+          <p><strong>Email:</strong> {{ order.customer.email }}</p>
+          <p><strong>Phone:</strong> {{ order.customer.phone }}</p>
+        </div>
+
+        <div class="detail-box">
+          <h3>Shipping Address</h3>
+          <p><strong>Address:</strong> {{ order.customer.address }}</p>
+          <p><strong>City:</strong> {{ order.customer.city }}</p>
+          <p>
+            <strong>Payment Method:</strong>
+            {{
+              order.customer.paymentMethod === 'cod'
+                ? 'Cash on Delivery'
+                : order.customer.paymentMethod === 'card'
+                  ? 'Credit / Debit Card (Demo)'
+                  : 'Bank Transfer / ABA Pay (Demo)'
+            }}
+          </p>
+        </div>
+      </div>
+
+      <!-- PURCHASED ITEMS -->
+      <div class="ordered-items">
+        <h3>Items Ordered ({{ order.items.length }})</h3>
+
+        <div class="ordered-items-list">
+          @for (item of order.items; track item.product.id) {
+            <div class="ordered-item">
+              <img
+                [src]="item.product.thumbnail"
+                [alt]="item.product.title"
+                (error)="onImageError($event)"
+              />
+              <div class="ordered-info">
+                <h4>{{ item.product.title }}</h4>
+                <span
+                  >Qty: {{ item.quantity }} ×
+                  {{ item.product.price | currency: 'USD' : 'symbol' : '1.2-2' }}</span
+                >
+              </div>
+              <strong class="ordered-total">
+                {{ item.product.price * item.quantity | currency: 'USD' : 'symbol' : '1.2-2' }}
+              </strong>
+            </div>
+          }
+        </div>
+
+        <div class="order-final-total">
+          <span>Total Paid (Simulated):</span>
+          <strong>{{ order.total | currency: 'USD' : 'symbol' : '1.2-2' }}</strong>
+        </div>
+      </div>
+
+      <div class="confirmation-actions">
+        <a routerLink="/products" class="primary-btn"> Continue Shopping → </a>
+        <a routerLink="/" class="secondary-btn"> Back to Home </a>
+      </div>
+    </div>
+  }
+  <!-- =========================================
+       EMPTY CART STATE
+  ========================================== -->
+  @else if (cartService.isEmpty()) {
+    <div class="empty-checkout">
+      <div class="empty-icon" aria-hidden="true">🛒</div>
+      <h2>Your cart is empty</h2>
+      <p>Add some products to your cart before proceeding to checkout.</p>
+      <a routerLink="/products" class="primary-btn"> Browse Products → </a>
+    </div>
+  }
+  <!-- =========================================
+       CHECKOUT FORM & SUMMARY
+  ========================================== -->
+  @else {
+    <div class="checkout-header">
+      <a routerLink="/cart" class="back-link"> ← Back to Cart </a>
+      <span class="step-label">CHECKOUT</span>
+      <h1>Complete Your Order</h1>
+      <p>Please enter your shipping information to finish your purchase.</p>
+    </div>
+
+    <div class="checkout-layout">
+      <!-- FORM -->
+      <form
+        #checkoutForm="ngForm"
+        (ngSubmit)="onSubmit(checkoutForm)"
+        class="checkout-form"
+        novalidate
+      >
+        <!-- SHIPPING INFORMATION -->
+        <section class="form-section">
+          <h2>1. Shipping Details</h2>
+
+          <div class="form-group">
+            <label for="fullName"> Full Name <span class="required">*</span> </label>
+            <input
+              id="fullName"
+              type="text"
+              name="fullName"
+              [(ngModel)]="customer.fullName"
+              #nameInput="ngModel"
+              required
+              minlength="2"
+              placeholder="e.g. John Doe"
+              [class.invalid]="nameInput.invalid && (nameInput.touched || checkoutForm.submitted)"
+            />
+            @if (nameInput.invalid && (nameInput.touched || checkoutForm.submitted)) {
+              <small class="error-msg">Please enter your full name (minimum 2 characters).</small>
+            }
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email"> Email Address <span class="required">*</span> </label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                [(ngModel)]="customer.email"
+                #emailInput="ngModel"
+                required
+                email
+                placeholder="john@example.com"
+                [class.invalid]="
+                  emailInput.invalid && (emailInput.touched || checkoutForm.submitted)
+                "
+              />
+              @if (emailInput.invalid && (emailInput.touched || checkoutForm.submitted)) {
+                <small class="error-msg">Please enter a valid email address.</small>
+              }
+            </div>
+
+            <div class="form-group">
+              <label for="phone"> Phone Number <span class="required">*</span> </label>
+              <input
+                id="phone"
+                type="tel"
+                name="phone"
+                [(ngModel)]="customer.phone"
+                #phoneInput="ngModel"
+                required
+                minlength="8"
+                placeholder="e.g. +855 12 345 678"
+                [class.invalid]="
+                  phoneInput.invalid && (phoneInput.touched || checkoutForm.submitted)
+                "
+              />
+              @if (phoneInput.invalid && (phoneInput.touched || checkoutForm.submitted)) {
+                <small class="error-msg"
+                  >Please enter a valid phone number (at least 8 digits).</small
+                >
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address"> Street Address <span class="required">*</span> </label>
+            <input
+              id="address"
+              type="text"
+              name="address"
+              [(ngModel)]="customer.address"
+              #addressInput="ngModel"
+              required
+              minlength="5"
+              placeholder="e.g. 123 Main Street, Apt 4B"
+              [class.invalid]="
+                addressInput.invalid && (addressInput.touched || checkoutForm.submitted)
+              "
+            />
+            @if (addressInput.invalid && (addressInput.touched || checkoutForm.submitted)) {
+              <small class="error-msg">Please enter a valid street address.</small>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="city"> City / Province <span class="required">*</span> </label>
+            <input
+              id="city"
+              type="text"
+              name="city"
+              [(ngModel)]="customer.city"
+              #cityInput="ngModel"
+              required
+              placeholder="e.g. Phnom Penh"
+              [class.invalid]="cityInput.invalid && (cityInput.touched || checkoutForm.submitted)"
+            />
+            @if (cityInput.invalid && (cityInput.touched || checkoutForm.submitted)) {
+              <small class="error-msg">Please enter your city.</small>
+            }
+          </div>
+        </section>
+
+        <!-- PAYMENT METHOD -->
+        <section class="form-section">
+          <h2>2. Payment Method</h2>
+          <p class="section-desc">Select how you would like to pay (simulated demo).</p>
+
+          <div class="payment-options">
+            <label class="payment-option" [class.selected]="customer.paymentMethod === 'cod'">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="cod"
+                [(ngModel)]="customer.paymentMethod"
+              />
+              <div class="option-content">
+                <strong>💵 Cash on Delivery</strong>
+                <small>Pay with cash when your items are delivered</small>
+              </div>
+            </label>
+
+            <label class="payment-option" [class.selected]="customer.paymentMethod === 'card'">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="card"
+                [(ngModel)]="customer.paymentMethod"
+              />
+              <div class="option-content">
+                <strong>💳 Credit / Debit Card (Simulated)</strong>
+                <small>Test card checkout (no real payment taken)</small>
+              </div>
+            </label>
+
+            <label class="payment-option" [class.selected]="customer.paymentMethod === 'aba'">
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="aba"
+                [(ngModel)]="customer.paymentMethod"
+              />
+              <div class="option-content">
+                <strong>📱 Bank Transfer / QR Pay (Simulated)</strong>
+                <small>Simulated instant payment transfer</small>
+              </div>
+            </label>
+          </div>
+
+          <div class="demo-banner">
+            🔒 <strong>Simulated Checkout:</strong> No real payment credentials will be requested or
+            stored.
+          </div>
+        </section>
+
+        <!-- SUBMIT BUTTON -->
+        <button type="submit" class="place-order-btn" [disabled]="isSubmitting()">
+          @if (isSubmitting()) {
+            <span>Processing Order...</span>
+          } @else {
+            <span
+              >Place Order ·
+              {{ cartService.cartTotal() | currency: 'USD' : 'symbol' : '1.2-2' }}</span
+            >
+          }
+        </button>
+      </form>
+
+      <!-- SUMMARY SIDEBAR -->
+      <aside class="checkout-summary">
+        <h2>Order Summary</h2>
+
+        <div class="summary-items">
+          @for (item of cartService.items(); track item.product.id) {
+            <div class="summary-item">
+              <img
+                [src]="item.product.thumbnail"
+                [alt]="item.product.title"
+                (error)="onImageError($event)"
+              />
+              <div class="item-desc">
+                <h4>{{ item.product.title }}</h4>
+                <small>Qty: {{ item.quantity }}</small>
+              </div>
+              <strong class="item-price">
+                {{ item.product.price * item.quantity | currency: 'USD' : 'symbol' : '1.2-2' }}
+              </strong>
+            </div>
+          }
+        </div>
+
+        <div class="summary-breakdown">
+          <div class="breakdown-row">
+            <span>Items ({{ cartService.cartCount() }})</span>
+            <span>{{ cartService.cartTotal() | currency: 'USD' : 'symbol' : '1.2-2' }}</span>
+          </div>
+
+          <div class="breakdown-row">
+            <span>Shipping</span>
+            <span class="free-tag">FREE</span>
+          </div>
+
+          <div class="breakdown-divider"></div>
+
+          <div class="breakdown-total">
+            <span>Total</span>
+            <strong>{{ cartService.cartTotal() | currency: 'USD' : 'symbol' : '1.2-2' }}</strong>
+          </div>
+        </div>
+
+        <div class="security-guarantee">
+          <span>✓ 30-Day Money-Back Guarantee</span>
+          <span>✓ Fast & Free Express Delivery</span>
+        </div>
+      </aside>
+    </div>
+  }
+</section>

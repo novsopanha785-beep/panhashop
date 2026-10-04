@@ -1,0 +1,189 @@
+.product-card {
+  background: white;
+
+  border: 1px solid #eeeeee;
+
+  border-radius: 22px;
+
+  overflow: hidden;
+
+  transition: 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-7px);
+
+  box-shadow: 0 20px 45px rgba(20, 20, 40, 0.09);
+}
+
+.product-image {
+  height: 270px;
+
+  background: #f6f6f8;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  text-decoration: none;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.06);
+}
+
+.discount {
+  position: absolute;
+
+  top: 14px;
+  left: 14px;
+
+  z-index: 2;
+
+  background: #111827;
+
+  color: white;
+
+  padding: 6px 10px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.view-overlay {
+  position: absolute;
+
+  left: 15px;
+  right: 15px;
+  bottom: 15px;
+
+  padding: 11px;
+
+  text-align: center;
+
+  color: white;
+
+  background: rgba(17, 24, 39, 0.9);
+
+  border-radius: 12px;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  opacity: 0;
+
+  transform: translateY(10px);
+
+  transition: 0.3s ease;
+}
+
+.product-card:hover .view-overlay {
+  opacity: 1;
+
+  transform: translateY(0);
+}
+
+.product-info {
+  padding: 20px;
+}
+
+.category {
+  margin: 0 0 7px;
+
+  color: #8b5cf6;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.7px;
+}
+
+.product-title {
+  display: block;
+
+  min-height: 42px;
+
+  color: #111827;
+
+  text-decoration: none;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  line-height: 1.4;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+
+  gap: 5px;
+
+  margin-top: 10px;
+
+  font-size: 12px;
+
+  color: #6b7280;
+}
+
+.stars {
+  color: #f59e0b;
+}
+
+.product-bottom {
+  margin-top: 17px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+}
+
+.product-bottom strong {
+  font-size: 20px;
+
+  color: #111827;
+}
+
+.add-button {
+  width: 38px;
+  height: 38px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #111827;
+
+  color: white;
+
+  font-size: 22px;
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.add-button:hover {
+  background: #6c5ce7;
+
+  transform: rotate(90deg);
+}

@@ -1,0 +1,52 @@
+<section class="help-page">
+  <div class="help-header">
+    <span class="eyebrow">SUPPORT</span>
+    <h1>Help Center</h1>
+    <p>
+      Answers to the questions we hear most often. Can't find what you need?
+      <a routerLink="/contact">Contact us</a>.
+    </p>
+  </div>
+
+  <nav class="help-jump" aria-label="Jump to section">
+    @for (section of sections; track section.id) {
+      <a [href]="'#' + section.id">{{ section.icon }} {{ section.title }}</a>
+    }
+  </nav>
+
+  @for (section of sections; track section.id) {
+    <section
+      class="help-section"
+      [id]="section.id"
+      [attr.aria-labelledby]="section.id + '-heading'"
+    >
+      <h2 [id]="section.id + '-heading'">
+        <span aria-hidden="true">{{ section.icon }}</span>
+        {{ section.title }}
+      </h2>
+
+      <div class="faq-list">
+        @for (item of section.items; track item.id) {
+          <div class="faq-item" [class.open]="isOpen(item.id)">
+            <button
+              type="button"
+              class="faq-question"
+              [attr.aria-expanded]="isOpen(item.id)"
+              [attr.aria-controls]="item.id + '-answer'"
+              (click)="toggle(item.id)"
+            >
+              <span>{{ item.question }}</span>
+              <span class="chevron" aria-hidden="true">⌄</span>
+            </button>
+
+            @if (isOpen(item.id)) {
+              <p class="faq-answer" [id]="item.id + '-answer'">
+                {{ item.answer }}
+              </p>
+            }
+          </div>
+        }
+      </div>
+    </section>
+  }
+</section>
