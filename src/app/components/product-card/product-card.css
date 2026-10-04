@@ -180,32 +180,10 @@
   cursor: pointer;
 
   transition: 0.25s ease;
-
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .add-button:hover {
   background: #6c5ce7;
 
   transform: rotate(90deg);
-}
-
-.add-button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Matches the 52px height of the "Buy Now" button on the product page,
-   so every primary action button is the same easy-to-tap size on mobile. */
-@media (max-width: 640px) {
-  .add-button {
-    width: 52px;
-    height: 52px;
-    font-size: 28px;
-  }
 }
