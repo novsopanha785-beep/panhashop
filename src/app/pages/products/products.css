@@ -133,6 +133,8 @@
 
 .category-filter-container {
   min-width: 0;
+  max-width: 100%;
+  position: relative;
 }
 
 .category-filter-scroll {
@@ -141,6 +143,36 @@
   overflow-x: auto;
   padding-bottom: 8px;
   scrollbar-width: thin;
+
+  /* Smooth native momentum scrolling on iOS/Android instead of a stiff drag */
+  -webkit-overflow-scrolling: touch;
+}
+
+.category-filter-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.category-filter-scroll::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+/* Soft fade on the right edge hints there's more to scroll to on mobile */
+.category-filter-container::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 8px;
+  width: 28px;
+  background: linear-gradient(to right, transparent, #ffffff);
+  pointer-events: none;
+}
+
+@media (min-width: 641px) {
+  .category-filter-container::after {
+    display: none;
+  }
 }
 
 .category-chip {
@@ -155,6 +187,7 @@
   white-space: nowrap;
   text-transform: capitalize;
   transition: 0.2s;
+  flex-shrink: 0;
 }
 
 .category-chip:hover {
@@ -630,9 +663,29 @@
   .filter-bar {
     flex-direction: column;
     align-items: stretch;
+    gap: 14px;
+  }
+
+  /* Pin the row to the screen width so it can only ever scroll, never
+     stretch wide enough to show every chip at once. */
+  .category-filter-container {
+    width: 100%;
+  }
+
+  .category-filter-scroll {
+    width: 100%;
   }
 
   .sort-box {
+    width: 100%;
     justify-content: space-between;
+  }
+
+  /* Full-width, larger touch target instead of a squeezed dropdown */
+  .sort-box select {
+    flex: 1;
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 14px;
   }
 }
